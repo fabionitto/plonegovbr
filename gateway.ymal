@@ -1,0 +1,33 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: govbr-gateway
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: govbr-ingress
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - govbr-gateway
+  http:
+  - match:
+    - uri:
+        prefix: /govbr
+    route:
+    - destination:
+        host: govbr-instance
+        port:
+          number: 8080

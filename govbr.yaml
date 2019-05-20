@@ -1,0 +1,26 @@
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: govbr
+spec:
+  hosts:
+  - govbr.nuvem.gov.br
+  gateways:
+  - public-gateway.istio-system.svc.cluster.local
+  http:
+  - match:
+    - uri:
+        prefix: /justica/admin
+    rewrite:
+      uri: /VirtualHostBase/https/govbr.nuvem.gov.br:443/VirtualHostRoot/_vh_justica/
+    route:
+    - destination:
+        host: govbr-instance
+  - match:
+    - uri:
+        prefix: /justica
+    rewrite:
+      uri: /VirtualHostBase/https/govbr.nuvem.gov.br:443/Plone/VirtualHostRoot/_vh_justica/
+    route:
+    - destination:
+        host: govbr-instance
